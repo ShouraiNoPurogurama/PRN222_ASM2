@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesManagement.Repository", "SalesManagement.Repository\SalesManagement.Repository.csproj", "{530F3298-7B75-457F-931F-952E66DCECCD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesManagement.Service", "SalesManagement.Service\SalesManagement.Service.csproj", "{1FF9155E-19A1-4524-9077-DC48946A717B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesManagement.RazorWebApp", "SalesManagement.RazorWebApp\SalesManagement.RazorWebApp.csproj", "{EF777F9E-3D72-4D1A-BD56-122D57213B10}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{530F3298-7B75-457F-931F-952E66DCECCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{530F3298-7B75-457F-931F-952E66DCECCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{530F3298-7B75-457F-931F-952E66DCECCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{530F3298-7B75-457F-931F-952E66DCECCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FF9155E-19A1-4524-9077-DC48946A717B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FF9155E-19A1-4524-9077-DC48946A717B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FF9155E-19A1-4524-9077-DC48946A717B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FF9155E-19A1-4524-9077-DC48946A717B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF777F9E-3D72-4D1A-BD56-122D57213B10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF777F9E-3D72-4D1A-BD56-122D57213B10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF777F9E-3D72-4D1A-BD56-122D57213B10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF777F9E-3D72-4D1A-BD56-122D57213B10}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
