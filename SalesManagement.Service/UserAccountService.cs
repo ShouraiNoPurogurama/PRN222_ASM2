@@ -5,12 +5,16 @@ namespace SalesManagement.Service;
 
 public class UserAccountService
 {
-    private readonly UserAccountRepository _userAccountRepository = new();
-    
+    private readonly IUnitOfWork _unitOfWork;
+
+    public UserAccountService(IUnitOfWork unitOfWork)
+    {
+        _unitOfWork = unitOfWork;
+    }
 
     public async Task<UserAccount?> LoginAsync(string username, string password)
     {
-        var user  = await _userAccountRepository.GetAsync(username, password);
+        var user = await _unitOfWork.UserAccountRepository.GetAsync(username, password);
         return user;
     }
 }

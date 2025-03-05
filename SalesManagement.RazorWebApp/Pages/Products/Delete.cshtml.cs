@@ -35,12 +35,13 @@ public class DeleteModel : PageModel
         if (id == null) return NotFound();
 
         var product = await _productService.GetByIdAsync(id.Value);
+        
         if (product != null)
         {
             Product = product;
             await _productService.DeleteAsync(Product.Id);
         }
-
+        
         return RedirectToPage("./Index");
     }
 }

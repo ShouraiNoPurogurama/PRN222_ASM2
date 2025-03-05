@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SalesManagement.Repositories.DBContext;
 
 namespace SalesManagement.Repository.Base;
 

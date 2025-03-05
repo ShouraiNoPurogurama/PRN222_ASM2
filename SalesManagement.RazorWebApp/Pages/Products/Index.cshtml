@@ -2,115 +2,141 @@
 @model IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Products";
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Product[0].ImageFile)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Product[0].Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Product[0].Category)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Product[0].Description)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Product[0].Price)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Product[0].Ingredients)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Product[0].UsageInstructions)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Product[0].StockQuantity)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Product[0].CreatedAt)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Product[0].CreatedBy)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Product[0].LastModified)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Product[0].LastModifiedBy)
-        </th>
-        <th></th>
-    </tr>
-    </thead>
-    @* Id here *@
-    <tbody id="idProductList">
-    @foreach (var item in Model.Product)
-    {
-        <tr id="tr_@item.Id">
-            <td>
-                <img src="@Url.Content("~/images/products/" + item.ImageFile)"
-                     alt="Product Image"
-                     class="img-thumbnail"
-                     data-bs-toggle="modal"
-                     data-bs-target="#imageModal"
-                     onclick="showImage('@Url.Content("~/images/products/" + item.ImageFile)')"/>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Ingredients)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UsageInstructions)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StockQuantity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedBy)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastModified)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastModifiedBy)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-        
+<style>
+    .table-translucent {
+        background-color: rgba(30, 37, 41, 0.5);
+        color: #fff;
+        border-radius: 10px; /* Smooth corners */
     }
-    </tbody>
-    <input style="display: none" aclass="form-control" id="deleteButton"/>
-    <input style="display: none" aclass="form-control" id="sendButton"/>
-</table>
+    .sticky-header {
+        margin-top: 70px; /* Add margin to prevent conflict with nav */
+        max-height: 80vh; /* Limit table height to 80% of viewport height */
+        overflow-y: auto; /* Enable scrolling */
+    }
+    .sticky-header thead th {
+        position: sticky;
+        top: 0;
+        background-color: rgba(52, 58, 64, 0.95); /* Darker header */
+        z-index: 1;
+        color: #fff;
+    }
+    .table-dark td {
+        background-color: rgba(33, 37, 41, 0.5); /* More translucent cells */
+    }
+    .img-thumbnail {
+        max-width: 100px; /* Smaller thumbnails */
+        cursor: pointer;
+    }
+    .action-buttons {
+        white-space: nowrap; /* Keep buttons on same line */
+    }
+    /* Add padding to the section to provide space for fixed nav */
+    #products {
+        padding-top: 80px;
+        padding-left: 15px; /* Add space on the left */
+        padding-right: 15px; /* Add space on the right */
+    }
+</style>
+
+<section id="products" class="info-section bg-right bg-dark">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="head-box mb-4">
+                    <h2 class="font-abril text-white">Our Products</h2>
+                </div>
+                <p class="mb-4">
+                    <a asp-page="Create" class="btn btn-primary">
+                        <i class="fa fa-plus"></i> Create New
+                    </a>
+                </p>
+                <div class="table-responsive">
+                    <table class="table table-hover table-dark table-translucent sticky-header">
+                        <thead>
+                        <tr>
+                            <th style="font-weight: bold">@Html.DisplayNameFor(model => model.PaginatedProducts.Data.First().ImageFile)</th>
+                            <th>@Html.DisplayNameFor(model => model.PaginatedProducts.Data.First().Name)</th>
+                            <th>@Html.DisplayNameFor(model => model.PaginatedProducts.Data.First().Category)</th>
+                            <th>@Html.DisplayNameFor(model => model.PaginatedProducts.Data.First().Price)</th>
+                            <th>@Html.DisplayNameFor(model => model.PaginatedProducts.Data.First().Ingredients)</th>
+                            <th>@Html.DisplayNameFor(model => model.PaginatedProducts.Data.First().UsageInstructions)</th>
+                            <th>@Html.DisplayNameFor(model => model.PaginatedProducts.Data.First().StockQuantity)</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="idProductList">
+                        @foreach (var item in Model.PaginatedProducts.Data)
+                        {
+                            <tr id="tr_@item.Id">
+                                <td>
+                                    <img src="@Url.Content("~/images/products/" + item.ImageFile)"
+                                         alt="Product Image"
+                                         class="img-thumbnail"
+                                         data-bs-toggle="modal"
+                                         data-bs-target="#imageModal"
+                                         onclick="showImage('@Url.Content("~/images/products/" + item.ImageFile)')"/>
+                                </td>
+                                <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Category.Name)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Price)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Ingredients)</td>
+                                <td>@Html.DisplayFor(modelItem => item.UsageInstructions)</td>
+                                <td>@Html.DisplayFor(modelItem => item.StockQuantity)</td>
+                                <td class="action-buttons">
+                                    <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" title="Edit">
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
+                                    <a asp-page="./Details" asp-route-id="@item.Id" class="btn btn-sm btn-info" data-bs-toggle="tooltip" title="Details">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+                                    <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" title="Delete">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item @(Model.PaginatedProducts.HasPreviousPage ? "" : "disabled")">
+                            <a class="page-link" asp-page="./Index" asp-route-pageIndex="@(Model.PaginatedProducts.PageIndex - 1)" asp-route-pageSize="@(Model.PaginatedProducts.PageSize)">Previous</a>
+                        </li>
+                        @for (var i = 0; i < Model.PaginatedProducts.TotalPages; i++)
+                        {
+                            <li class="page-item @(Model.PaginatedProducts.PageIndex == i ? "active" : "")">
+                                <a class="page-link" asp-page="./Index" asp-route-pageIndex="@i" asp-route-pageSize="@(Model.PaginatedProducts.PageSize)">@(i+1)</a>
+                            </li>
+                        }
+                        <li class="page-item @(Model.PaginatedProducts.HasNextPage ? "" : "disabled")">
+                            <a class="page-link" asp-page="./Index" asp-route-pageIndex="@(Model.PaginatedProducts.PageIndex + 1)" asp-route-pageSize="@(Model.PaginatedProducts.PageSize)">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Image Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalLabel">Product Image</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="modalImage" src="" class="img-fluid" alt="Product Image">
+            </div>
+        </div>
+    </div>
+</div>
 
 <script src="~/lib/signalr/dist/browser/signalr.js"></script>
 <script src="~/js/SalesManagementClient.js"></script>

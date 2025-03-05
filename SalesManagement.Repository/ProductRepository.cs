@@ -1,14 +1,14 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using SalesManagement.Repositories.Models;
-using SalesManagement.Repositories.Pagination;
 using SalesManagement.Repository.Base;
+using SalesManagement.Repository.Pagination;
 
 namespace SalesManagement.Repository;
 
 public class ProductRepository : GenericRepository<Product>
 {
-    public ProductRepository()
+    public ProductRepository(SalesManagementDBContext dbContext) : base(dbContext)
     {
     }
 
@@ -16,39 +16,53 @@ public class ProductRepository : GenericRepository<Product>
     /// Get all products asynchronously without pagination
     /// </summary>
     /// <returns>List of all <see cref="Product"/> entities in the database</returns>
-    public new async Task<List<Product>> GetAllAsync()
+    public async Task<PaginatedResult<Product>> GetAllAsync(PaginationRequest? paginationRequest)
     {
+        var pageIndex = paginationRequest?.PageIndex ?? 0;
+        
+        var pageSize = paginationRequest?.PageSize ?? 5;
+        
         var products = await _context.Products
             .AsNoTracking()
             .Include(p => p.Category)
             .OrderBy(p => p.Name)
+            .Skip(pageIndex * pageSize)
+            .Take(pageSize)
             .ToListAsync();
 
-        return products;
+        var totalCount = await _context.Products.LongCountAsync();
+
+        return new PaginatedResult<Product>(pageIndex, pageSize, totalCount, products);
     }
 
     /// <summary>
     /// Find matching products based on a condition 
     /// </summary>
     /// <param name="predicate">Condition to find</param>
+    /// <param name="paginationRequest">Pagination</param>
     /// <returns>List of <see cref="Product"/> entities match the condition</returns>
-    public async Task<(List<Product>,int)> FindByConditionAsync(Expression<Func<Product, bool>> predicate, PaginationRequest? paginationRequest)
+    public async Task<PaginatedResult<Product>> FindByConditionAsync(Expression<Func<Product, bool>> predicate,
+        PaginationRequest? paginationRequest)
     {
+        var pageIndex = paginationRequest?.PageIndex ?? 0;
+        
+        var pageSize = paginationRequest?.PageSize ?? 5;
+        
         var products = await _context.Products.Include(p => p.Category)
             .AsNoTracking()
             .Include(p => p.Category)
             .Where(predicate)
-            .Skip(paginationRequest?.PageIndex * paginationRequest?.PageSize ?? 0)
-            .Take(paginationRequest?.PageSize ?? 5)
+            .Skip(pageIndex * pageSize)
+            .Take(pageSize)
             .ToListAsync();
 
-        var countWithoutPagination  = await _context.Products.Include(p => p.Category)
+        var totalCount = await _context.Products
             .AsNoTracking()
             .Include(p => p.Category)
             .Where(predicate)
-            .CountAsync();
-        
-        return (products, countWithoutPagination);
+            .LongCountAsync();
+
+        return new PaginatedResult<Product>(pageIndex, pageSize, totalCount, products);
     }
 
     public async Task<Product?> GetByIdAsync(Guid id)
@@ -61,5 +75,25 @@ public class ProductRepository : GenericRepository<Product>
         return product;
     }
 
-    public long CountAll() => _context.Products.LongCount();
+    public async Task<int> UpdateAsync(Product product)
+    {
+        var existingProduct = await _context.Products
+            .AsNoTracking()
+            .FirstOrDefaultAsync(p => p.Id.Equals(product.Id));
+
+        if (string.IsNullOrEmpty(product.ImageFile))
+        {
+            product.ImageFile = existingProduct.ImageFile;
+        }
+        
+        var category = await _context.Categories
+            .AsNoTracking()
+            .FirstOrDefaultAsync(c => c.Id.Equals(product.CategoryId));
+
+        product.Category = category;
+
+        _context.Products.Update(product);
+        
+        return await _context.SaveChangesAsync();
+    }
 }

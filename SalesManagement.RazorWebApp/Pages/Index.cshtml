@@ -4,7 +4,233 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<style>
+    .bg-dark {
+        background-color: #0e0a06 !important;
+    }
+
+    section {
+        padding-bottom: 40px;
+    }
+</style>
+
+
+<section id="home" class="intro intro-bg bg-overlay parallax">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-6 col-md-12 caption-two-panel ml-auto pt-5">
+                <div class="intro-caption mt-5">
+                    <h1 class="text-white mb-2">Welcome to Our Skincare Sales</h1>
+                    <p class="text-white mb-4">Discover the best skincare products to keep your skin healthy and
+                        glowing.</p>
+                    <a class="btn btn-primary text-white mr-3" asp-area="" asp-page="/Products/Index">Explore More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="services" class="info-section text-white bg-right bg-dark">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="head-box">
+                    <h2 class="font-abril">Our Skincare Services</h2>
+                </div>
+                <div class="three-panel-block mt-5">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="service-block mb-5">
+                                <h3 class="text-primary">Facial Treatment</h3>
+                                <p>Experience the best facial treatments to rejuvenate your skin.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="service-block mb-5">
+                                <h3 class="text-primary">Skin Massage</h3>
+                                <p>Relax and enjoy our skin massage services for a glowing complexion.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="service-block mb-5">
+                                <h3 class="text-primary">Chemical Peel</h3>
+                                <p>Get a chemical peel to remove dead skin cells and reveal fresh skin.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="service-block">
+                                <h3 class="text-primary">Face Mask</h3>
+                                <p>Enjoy our range of face masks for different skin types and needs.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="about" class="copy-content-sec sec-bg-02 h-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-5 col-md-12 copy-container ml-auto">
+                <div class="copy-content pr-4">
+                    <h2 class="font-abril text-primary">Who We Are</h2>
+                    <p class="lead ml-2">We are dedicated to providing the best skincare products and services to keep
+                        your skin healthy and beautiful.</p>
+                    <p class="ml-2">Our team of experts is here to help you find the perfect skincare routine for your
+                        needs.</p>
+                    <p class="mt-4 ml-2"><a href="#" class="text-primary">Read More</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="price" class="info-section sec-bg-03 bg-overlay">
+    <div class="container text-white">
+        <div class="head-box text-center mb-5">
+            <h2 class="font-abril">Our Prices</h2>
+        </div>
+        <div class="three-panel-block my-4">
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6 pl-md-5 mb-4">
+                    <div class="service-block-bg text-center p-3">
+                        <div class="price-count font-abril"><span>$</span>50</div>
+                        <h3>Facial Treatment</h3>
+                        <p class="px-4">Rejuvenate your skin with our facial treatments.</p>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 pr-md-5 mb-4">
+                    <div class="service-block-bg text-center p-3">
+                        <div class="price-count font-abril"><span>$</span>40</div>
+                        <h3>Skin Massage</h3>
+                        <p class="px-4">Relax and enjoy our skin massage services.</p>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 pl-md-5 mb-4">
+                    <div class="service-block-bg text-center p-3">
+                        <div class="price-count font-abril"><span>$</span>60</div>
+                        <h3>Chemical Peel</h3>
+                        <p class="px-4">Remove dead skin cells with our chemical peel.</p>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 pr-md-5">
+                    <div class="service-block-bg text-center p-3">
+                        <div class="price-count font-abril"><span>$</span>30</div>
+                        <h3>Face Mask</h3>
+                        <p class="px-4">Enjoy our range of face masks for different skin types.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="testimonial" class="testimonial-section sec-bg-04 py-5 h-100">
+    <div class="container">
+        <div class="row">
+            <div class="head-box text-center mb-3 col-md-12 mt-5">
+                <h2 class="font-abril">What Our Clients Say</h2>
+            </div>
+        </div>
+        <div class="single-testimonial">
+            <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner pt-5" role="listbox">
+                    <div class="carousel-item active">
+                        <div class="testimonial-box text-center">
+                            <div class="testimonial-content w-100 bg-faded">
+                                <p class="mb-0"><i class="fa fa-quote-left fa-3x" aria-hidden="true"></i></p>
+                                <p class="lead font-abril">"The best skincare products I have ever used. My skin feels
+                                    amazing!"</p>
+                                <div class="testimonial-footer">
+                                    <h4 class="mt-2 mb-0 text-primary">Jane Doe</h4>
+                                    <p>- United States</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="testimonial-box text-center">
+                            <div class="testimonial-content w-100 bg-faded">
+                                <p class="mb-0"><i class="fa fa-quote-left fa-3x" aria-hidden="true"></i></p>
+                                <p class="lead font-abril">"Excellent service and fantastic products. Highly
+                                    recommend!"</p>
+                                <div class="testimonial-footer">
+                                    <h4 class="mt-2 mb-0 text-primary">John Smith</h4>
+                                    <p>- United States</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="navigator-box">
+                    <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
+                        <span class="fa fa-angle-left" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
+                        <span class="fa fa-angle-right" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="contact" class="contact-section h-100 bg-dark">
+    <div id="map" class="bg-overlay"></div>
+    <div class="container py-5">
+        <div class="col-lg-8 col-md-6 col-sm-10 form-sec bg-white my-5 p-5 mx-auto">
+            <form>
+                <h2 class="mb-4">Contact Us!</h2>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="sr-only" for="formGroupExampleInput">Full Name</label>
+                            <input class="form-control" id="formGroupExampleInput" placeholder="Full Name"
+                                   onfocus="this.placeholder=''" onblur="this.placeholder='Full Name'" type="text">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="sr-only" for="formGroupExampleInput2">Phone Number</label>
+                            <input class="form-control" id="formGroupExampleInput2" placeholder="Phone Number"
+                                   onfocus="this.placeholder=''" onblur="this.placeholder='Phone Number'" type="text">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="sr-only" for="formGroupExampleInput2">Email Address</label>
+                            <input class="form-control" id="formGroupExampleInput2" placeholder="Email Address"
+                                   onfocus="this.placeholder=''" onblur="this.placeholder='Email Address'" type="email">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="sr-only" for="formGroupExampleInput2">Address</label>
+                            <input class="form-control" id="formGroupExampleInput2" placeholder="Enter Address"
+                                   onfocus="this.placeholder=''" onblur="this.placeholder='Enter Address'" type="email">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="sr-only" for="formGroupExampleInput2">Message</label>
+                            <textarea class="form-control" placeholder="Enter your message here!" rows="4"
+                                      onfocus="this.placeholder=''"
+                                      onblur="this.placeholder='Enter your message here!'"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-primary btn-capsul px-4">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

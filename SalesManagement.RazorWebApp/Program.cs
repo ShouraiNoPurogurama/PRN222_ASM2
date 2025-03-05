@@ -1,20 +1,26 @@
+using Microsoft.AspNetCore.Mvc;
 using SalesManagement.RazorWebApp.Hubs;
 using SalesManagement.Repositories.DBContext;
+using SalesManagement.Repository.UoW;
 using SalesManagement.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages(options =>
+{
+    options.Conventions.ConfigureFilter(new IgnoreAntiforgeryTokenAttribute());
+});builder.Services.AddControllers();
 
 builder.Services.AddScoped<SalesManagementDBContext>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<UserAccountService>();
 builder.Services.AddScoped<CategoryService>();
+builder.Services.AddScoped<ValidationService>();
 
 builder.Services.AddSignalR();
 
-
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 var app = builder.Build();
 
@@ -28,6 +34,8 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+app.MapControllers();
 
 app.UseRouting();
 

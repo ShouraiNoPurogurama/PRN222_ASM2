@@ -2,91 +2,106 @@
 @model DetailsModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Product Details";
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
-<h1>Details</h1>
+<section id="product-details" class="info-section text-white bg-right bg-dark">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="head-box">
+                    <h2 class="font-abril">Product Details</h2>
+                </div>
+                <input type="hidden" asp-for="Product.Id" id="productId"/>
+                <div class="product-details mt-5" id="table-container">
+                    <table id="details-table" style="color: white" class="table">
+                        <tbody>
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.Product.Name)</th>
+                            <td class="productName" id="productName" style="font-weight: bold">@Html.DisplayFor(model => model.Product.Name)</td>
+                        </tr>
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.Product.Category)</th>
+                            <td class="productCategory" id="productCategory">@Html.DisplayFor(model => model.Product.Category.Name)</td>
+                        </tr>
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.Product.Description)</th>
+                            <td class="productDescription" id="productDescription">@Html.DisplayFor(model => model.Product.Description)</td>
+                        </tr>
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.Product.ImageFile)</th>
+                            <td>
+                                
+                                <img src="@Url.Content("~/images/products/" + Model.Product.ImageFile)"
+                                     alt="Product Image"
+                                     class="img-thumbnail"
+                                     data-bs-toggle="modal"
+                                     data-bs-target="#imageModal"
+                                     id="productImageFile"
+                                     />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.Product.Price)</th>
+                            <td class="productPrice" id="productPrice">@Html.DisplayFor(model => model.Product.Price)</td>
+                        </tr>
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.Product.Ingredients)</th>
+                            <td class="productIngredients" id="productIngredients">@Html.DisplayFor(model => model.Product.Ingredients)</td>
+                        </tr>
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.Product.UsageInstructions)</th>
+                            <td class="productUsageInstructions" id="productUsageInstructions">@Html.DisplayFor(model => model.Product.UsageInstructions)</td>
+                        </tr>
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.Product.StockQuantity)</th>
+                            <td class="productStockQuantity" id="productStockQuantity">@Html.DisplayFor(model => model.Product.StockQuantity)</td>
+                        </tr>
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.Product.CreatedAt)</th>
+                            <td class="productCreatedAt" id="productCreatedAt">@Html.DisplayFor(model => model.Product.CreatedAt)</td>
+                        </tr>
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.Product.CreatedBy)</th>
+                            <td class="productCreatedBy" id="productCreatedBy">@Html.DisplayFor(model => model.Product.CreatedBy)</td>
+                        </tr>
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.Product.LastModified)</th>
+                            <td class="productLastModified" id="productLastModified">@Html.DisplayFor(model => model.Product.LastModified)</td>
+                        </tr>
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.Product.LastModifiedBy)</th>
+                            <td class="productLastModifiedBy" id="productLastModifiedBy">@Html.DisplayFor(model => model.Product.LastModifiedBy)</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <a asp-page="./Edit" asp-route-id="@Model.Product.Id" class="btn btn-primary">Edit</a> |
+                    <a asp-page="./Delete" asp-route-id="@Model.Product.Id" class="btn btn-primary">Delete</a> |
+                    <a asp-page="./Index" class="btn btn-secondary">Back to List</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-<div>
-    <h4>Product</h4>
-    <hr/>
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Product.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Product.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Product.Category)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Product.Category)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Product.Description)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Product.Description)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Product.ImageFile)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Product.ImageFile)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Product.Price)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Product.Price)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Product.Ingredients)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Product.Ingredients)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Product.UsageInstructions)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Product.UsageInstructions)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Product.StockQuantity)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Product.StockQuantity)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Product.CreatedAt)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Product.CreatedAt)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Product.CreatedBy)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Product.CreatedBy)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Product.LastModified)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Product.LastModified)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Product.LastModifiedBy)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Product.LastModifiedBy)
-        </dd>
-    </dl>
+<!-- Modal for displaying full image -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalLabel">Product Image</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img style="max-width: 100%" id="modalImage" class="modal-img" src="" alt="Full Product Image">
+            </div>
+        </div>
+    </div>
 </div>
-<div>
-    <a asp-page="./Edit" asp-route-id="@Model.Product.Id">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
-</div>
+
+<script src="~/lib/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/SalesManagementClient.js"></script>
+

@@ -8,10 +8,12 @@ namespace SalesManagement.RazorWebApp.Hubs;
 public class SalesManagementHubs : Hub
 {
     private readonly IProductService _productService;
+    private readonly CategoryService _categoryService;
 
-    public SalesManagementHubs(IProductService productService)
+    public SalesManagementHubs(IProductService productService, CategoryService categoryService)
     {
         _productService = productService;
+        _categoryService = categoryService;
     }
 
     public async Task SendCreatedProduct(string productJson)
@@ -21,11 +23,42 @@ public class SalesManagementHubs : Hub
             var product = JsonConvert.DeserializeObject<Product>(productJson)
                 ?? throw new InvalidDataException();
 
-            await Clients.All.SendAsync("Receive_CreatedProduct", product);
-            
-            Console.WriteLine(product.Category);
+            var validationResponse = await _productService.CreateAsync(product);
 
-            await _productService.CreateAsync(product);
+            if (!validationResponse.IsValid)
+            {
+                await Clients.Caller.SendAsync("Receive_ValidationErrors", validationResponse.Errors);
+                return;
+            }
+            
+            var category = await _categoryService.GetByIdAsync(product.CategoryId.Value);
+            
+            product.Category = category;
+
+            await Clients.All.SendAsync("Receive_CreatedProduct", product);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+        public async Task SendUpdatedProduct(string productJson)
+    {
+        try
+        {
+            var product = JsonConvert.DeserializeObject<Product>(productJson)
+                ?? throw new InvalidDataException();
+            
+            var validationResponse = await _productService.UpdateAsync(product);
+            
+            if (!validationResponse.IsValid)
+            {
+                await Clients.Caller.SendAsync("Receive_ValidationErrors", validationResponse.Errors);
+                return;
+            }
+            
+            await Clients.All.SendAsync("Receive_UpdatedProduct", product);
         }
         catch (Exception e)
         {

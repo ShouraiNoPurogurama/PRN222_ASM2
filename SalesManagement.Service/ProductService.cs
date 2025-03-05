@@ -1,61 +1,88 @@
 ﻿using SalesManagement.Repositories.Models;
-using SalesManagement.Repositories.Pagination;
 using SalesManagement.Repository;
+using SalesManagement.Repository.Dtos;
+using SalesManagement.Repository.Pagination;
 
 namespace SalesManagement.Service;
 
 public interface IProductService
 {
-    Task<IEnumerable<Product>> GetAllAsync();
+    Task<PaginatedResult<Product>> GetAllAsync(PaginationRequest? paginationRequest);
     Task<Product?> GetByIdAsync(Guid id);
-    Task<int> CreateAsync(Product product);
-    Task<int> UpdateAsync(Product product);
+    Task<ValidationResponse> CreateAsync(Product product);
+    Task<ValidationResponse> UpdateAsync(Product product);
     Task<bool> DeleteAsync(Guid id);
-    Task<(IEnumerable<Product>, int)> Search(PaginationRequest paginationRequest, string? name, string? category, string? ingredients);
-    long CountAll();
+
+    Task<PaginatedResult<Product>> Search(PaginationRequest paginationRequest, string? name, string? category,
+        string? ingredients);
 }
 
 public class ProductService : IProductService
 {
-    private readonly ProductRepository _productRepository = new();
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly ValidationService _validationService;
 
-    public async Task<IEnumerable<Product>> GetAllAsync()
+    public ProductService(IUnitOfWork unitOfWork, ValidationService validationService)
     {
-        var products = await _productRepository.GetAllAsync();
+        _unitOfWork = unitOfWork;
+        _validationService = validationService;
+    }
+
+    public async Task<PaginatedResult<Product>> GetAllAsync(PaginationRequest? paginationRequest)
+    {
+        var products = await _unitOfWork.ProductRepository.GetAllAsync(paginationRequest);
 
         return products;
     }
 
     public async Task<Product?> GetByIdAsync(Guid id)
     {
-        return await _productRepository.GetByIdAsync(id);
+        return await _unitOfWork.ProductRepository.GetByIdAsync(id);
     }
 
-    public async Task<int> CreateAsync(Product product)
+
+    public async Task<ValidationResponse> CreateAsync(Product product)
     {
-        return await _productRepository.CreateAsync(product);
+        if (!_validationService.ValidateProduct(product))
+        {
+            return new ValidationResponse(false, _validationService.GetValidationErrors());
+        }
+
+        await _unitOfWork.ProductRepository.CreateAsync(product);
+        return new ValidationResponse(true, new Dictionary<string, List<string>>());
     }
 
-    public async Task<int> UpdateAsync(Product product)
+    public async Task<ValidationResponse> UpdateAsync(Product product)
     {
-        return await _productRepository.UpdateAsync(product);
+        if (!_validationService.ValidateProduct(product))
+        {
+            return new ValidationResponse(false, _validationService.GetValidationErrors());
+        }
+
+        await _unitOfWork.ProductRepository.UpdateAsync(product);
+        return new ValidationResponse(true, new Dictionary<string, List<string>>());
     }
+
 
     public async Task<bool> DeleteAsync(Guid id)
     {
-        var product = await _productRepository.GetByIdAsync(id);
-        return await _productRepository.RemoveAsync(product);
+        var product = await _unitOfWork.ProductRepository.GetByIdAsync(id);
+        return await _unitOfWork.ProductRepository.RemoveAsync(product);
     }
 
-    public async Task<(IEnumerable<Product>, int)> Search(PaginationRequest paginationRequest, string? name, string? category, string? ingredients)
+    public async Task<PaginatedResult<Product>> Search(PaginationRequest paginationRequest, string? name, string? category,
+        string? ingredients)
     {
-        var productsAndCount = await _productRepository.FindByConditionAsync(p => 
+        var paginatedResult = await _unitOfWork.ProductRepository.FindByConditionAsync(p =>
             (string.IsNullOrEmpty(name) || p.Name.Contains(name)) &&
             (string.IsNullOrEmpty(category) || p.Category.Name.Contains(category)) &&
             (string.IsNullOrEmpty(ingredients) || p.Ingredients.Contains(ingredients)), paginationRequest);
 
-        return productsAndCount;
+        return paginatedResult;
     }
 
-    public long CountAll() => _productRepository.CountAll();
+    public Dictionary<string, List<string>> GetValidationErrors()
+    {
+        return _validationService.GetValidationErrors();
+    }
 }

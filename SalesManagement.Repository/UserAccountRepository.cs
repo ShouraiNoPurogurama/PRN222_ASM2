@@ -6,7 +6,7 @@ namespace SalesManagement.Repository;
 
 public class UserAccountRepository : GenericRepository<UserAccount>
 {
-    public UserAccountRepository()
+    public UserAccountRepository(SalesManagementDBContext dbContext) : base(dbContext)
     {
     }
 

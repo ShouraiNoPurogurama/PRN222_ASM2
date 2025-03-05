@@ -5,7 +5,7 @@ namespace SalesManagement.Repository;
 
 public class CategoryRepository : GenericRepository<Category>
 {
-    public CategoryRepository()
+    public CategoryRepository(SalesManagementDBContext dbContext) : base(dbContext)
     {
         
     }
