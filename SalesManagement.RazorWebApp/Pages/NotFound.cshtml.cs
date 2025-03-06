@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-
-namespace SalesManagement.RazorWebApp.Pages;
+﻿namespace SalesManagement.RazorWebApp.Pages;
 
 public class NotFound : PageModel
 {

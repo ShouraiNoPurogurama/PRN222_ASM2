@@ -1,4 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using Discount.gRPC;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using SalesManagement.RazorWebApp.Hubs;
@@ -10,10 +12,7 @@ using SalesManagement.Service;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorPages(options =>
-{
-    options.Conventions.ConfigureFilter(new IgnoreAntiforgeryTokenAttribute());
-});
+builder.Services.AddRazorPages(options => { options.Conventions.ConfigureFilter(new IgnoreAntiforgeryTokenAttribute()); });
 
 builder.Services.AddControllers();
 
@@ -22,17 +21,50 @@ builder.Services.AddDbContext<SalesManagementDBContext>((sp, opt) =>
     opt.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
     opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
-
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<UserAccountService>();
 builder.Services.AddScoped<CategoryService>();
 builder.Services.AddScoped<ValidationService>();
-
-builder.Services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
-
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddSignalR();
 
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+builder.Services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Account/Login";
+        options.LogoutPath = "/Account/Logout";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+    });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOrManagerOnly", policy =>
+        policy.RequireAssertion(context =>
+            context.User.HasClaim(c => c.Type == ClaimTypes.Role && (c.Value == "1" || c.Value == "2"))));
+    
+    options.AddPolicy("AdminOnly", policy =>
+        policy.RequireAssertion(context =>
+            context.User.HasClaim(c => c.Type == ClaimTypes.Role && (c.Value == "1"))));
+
+});
+
+
+//gRPC services
+builder.Services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>(options =>
+{
+    options.Address = new Uri(builder.Configuration["GrpcSettings:DiscountUri"]!);
+})
+.ConfigurePrimaryHttpMessageHandler(() =>
+{
+    var handler = new HttpClientHandler
+    {
+        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+    };
+    return handler;
+});
+
 
 var app = builder.Build();
 
@@ -64,6 +96,7 @@ app.MapControllers();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();

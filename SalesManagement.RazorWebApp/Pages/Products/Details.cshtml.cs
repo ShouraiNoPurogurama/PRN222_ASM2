@@ -1,7 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using SalesManagement.Repositories.DBContext;
 using SalesManagement.Repositories.Models;
 using SalesManagement.Service;
 
@@ -25,7 +21,7 @@ public class DetailsModel : PageModel
         var product = await _productService.GetByIdAsync(id.Value);
         if (product == null)
             return NotFound();
-        Product = product;
+        Product = product.Adapt<Product>();
         return Page();
     }
 }

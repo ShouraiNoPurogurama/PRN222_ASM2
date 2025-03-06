@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesManagement.Service", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesManagement.RazorWebApp", "SalesManagement.RazorWebApp\SalesManagement.RazorWebApp.csproj", "{EF777F9E-3D72-4D1A-BD56-122D57213B10}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Discount.gRPC", "Discount\Discount.gRPC\Discount.gRPC.csproj", "{A21C1EFF-7717-4C91-8646-AE0C5117DB8B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{EF777F9E-3D72-4D1A-BD56-122D57213B10}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF777F9E-3D72-4D1A-BD56-122D57213B10}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF777F9E-3D72-4D1A-BD56-122D57213B10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A21C1EFF-7717-4C91-8646-AE0C5117DB8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A21C1EFF-7717-4C91-8646-AE0C5117DB8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A21C1EFF-7717-4C91-8646-AE0C5117DB8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A21C1EFF-7717-4C91-8646-AE0C5117DB8B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

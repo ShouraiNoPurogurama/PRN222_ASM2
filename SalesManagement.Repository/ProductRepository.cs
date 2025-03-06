@@ -19,9 +19,9 @@ public class ProductRepository : GenericRepository<Product>
     public async Task<PaginatedResult<Product>> GetAllAsync(PaginationRequest? paginationRequest)
     {
         var pageIndex = paginationRequest?.PageIndex ?? 0;
-        
+
         var pageSize = paginationRequest?.PageSize ?? 5;
-        
+
         var products = await _context.Products
             .AsNoTracking()
             .Include(p => p.Category)
@@ -41,26 +41,26 @@ public class ProductRepository : GenericRepository<Product>
     /// <param name="predicate">Condition to find</param>
     /// <param name="paginationRequest">Pagination</param>
     /// <returns>List of <see cref="Product"/> entities match the condition</returns>
-    public async Task<PaginatedResult<Product>> FindByConditionAsync(Expression<Func<Product, bool>> predicate,
-        PaginationRequest? paginationRequest)
+    public async Task<PaginatedResult<Product>> FindByConditionAsync(string? name, string? category,
+        string? ingredients, PaginationRequest? paginationRequest)
     {
         var pageIndex = paginationRequest?.PageIndex ?? 0;
-        
+
         var pageSize = paginationRequest?.PageSize ?? 5;
-        
-        var products = await _context.Products.Include(p => p.Category)
+
+        var query = _context.Products
             .AsNoTracking()
             .Include(p => p.Category)
-            .Where(predicate)
+            .Where(p => (string.IsNullOrWhiteSpace(name) || p.Name.Contains(name)) &&
+                        (string.IsNullOrWhiteSpace(category) || p.Category.Name.Contains(category)) &&
+                        (string.IsNullOrWhiteSpace(ingredients) || p.Ingredients.Contains(ingredients)));
+
+        var products = await query
             .Skip(pageIndex * pageSize)
             .Take(pageSize)
             .ToListAsync();
 
-        var totalCount = await _context.Products
-            .AsNoTracking()
-            .Include(p => p.Category)
-            .Where(predicate)
-            .LongCountAsync();
+        var totalCount = await query.LongCountAsync();
 
         return new PaginatedResult<Product>(pageIndex, pageSize, totalCount, products);
     }
@@ -85,7 +85,7 @@ public class ProductRepository : GenericRepository<Product>
         {
             product.ImageFile = existingProduct.ImageFile;
         }
-        
+
         var category = await _context.Categories
             .AsNoTracking()
             .FirstOrDefaultAsync(c => c.Id.Equals(product.CategoryId));
@@ -93,7 +93,7 @@ public class ProductRepository : GenericRepository<Product>
         product.Category = category;
 
         _context.Products.Update(product);
-        
+
         return await _context.SaveChangesAsync();
     }
 }

@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using SalesManagement.Repositories.DBContext;
 using SalesManagement.Repositories.Models;
@@ -7,6 +5,7 @@ using SalesManagement.Service;
 
 namespace SalesManagement.RazorWebApp.Pages.Products;
 
+[Authorize(Policy = "AdminOrManagerOnly")]
 public class DeleteModel : PageModel
 {
     private readonly IProductService _productService;
@@ -26,7 +25,7 @@ public class DeleteModel : PageModel
 
         if (product == null)
             return NotFound();
-        Product = product;
+        Product = product.Adapt<Product>();
         return Page();
     }
 
@@ -38,7 +37,7 @@ public class DeleteModel : PageModel
         
         if (product != null)
         {
-            Product = product;
+            Product = product.Adapt<Product>();
             await _productService.DeleteAsync(Product.Id);
         }
         

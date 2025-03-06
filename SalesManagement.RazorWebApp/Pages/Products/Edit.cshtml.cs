@@ -1,14 +1,10 @@
-using Mapster;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using SalesManagement.Repositories.Models;
 using SalesManagement.Repository.Dtos;
 using SalesManagement.Service;
 
 namespace SalesManagement.RazorWebApp.Pages.Products;
 
+[Authorize(Policy = "AdminOrManagerOnly")]
 [IgnoreAntiforgeryToken(Order = 2000)] //To be able to take requests from Js scripts
 public class EditModel : PageModel
 {
@@ -35,7 +31,7 @@ public class EditModel : PageModel
 
         var product = await _productService.GetByIdAsync(id.Value);
         if (product == null) return NotFound();
-        Product = product;
+        Product = product.Adapt<Product>();
 
         var categories = await _categoryService.GetAllAsync();
         ViewData["CategoryList"] = new SelectList(categories, "Id", "Name", Product.Category);

@@ -1,5 +1,4 @@
-﻿using Mapster;
-using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 using SalesManagement.Repositories.Models;
 using SalesManagement.Repository.Dtos;

@@ -1,6 +1,5 @@
 @page
 @model IndexModel
-
 @{
     ViewData["Title"] = "Products";
     Layout = "~/Pages/Shared/_Layout.cshtml";
@@ -10,35 +9,35 @@
     .table-translucent {
         background-color: rgba(30, 37, 41, 0.5);
         color: #fff;
-        border-radius: 10px; /* Smooth corners */
+        border-radius: 10px;
     }
     .sticky-header {
-        margin-top: 70px; /* Add margin to prevent conflict with nav */
-        max-height: 80vh; /* Limit table height to 80% of viewport height */
-        overflow-y: auto; /* Enable scrolling */
+        margin-top: 70px;
+        max-height: 80vh;
+        overflow-y: auto;
     }
     .sticky-header thead th {
         position: sticky;
         top: 0;
-        background-color: rgba(52, 58, 64, 0.95); /* Darker header */
+        background-color: rgba(52, 58, 64, 0.95);
         z-index: 1;
         color: #fff;
     }
     .table-dark td {
-        background-color: rgba(33, 37, 41, 0.5); /* More translucent cells */
+        background-color: rgba(33, 37, 41, 0.5);
     }
     .img-thumbnail {
-        max-width: 100px; /* Smaller thumbnails */
+        max-width: 100px;
         cursor: pointer;
     }
     .action-buttons {
-        white-space: nowrap; /* Keep buttons on same line */
+        white-space: nowrap;
     }
-    /* Add padding to the section to provide space for fixed nav */
+
     #products {
         padding-top: 80px;
-        padding-left: 15px; /* Add space on the left */
-        padding-right: 15px; /* Add space on the right */
+        padding-left: 15px;
+        padding-right: 15px;
     }
 </style>
 
@@ -54,6 +53,20 @@
                         <i class="fa fa-plus"></i> Create New
                     </a>
                 </p>
+                <form method="get">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <input type="text" name="name" class="form-control" placeholder="Search by Name" value="@Model.SearchName" />
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" name="ingredients" class="form-control" placeholder="Search by Ingredients" value="@Model.SearchIngredients" />
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" name="category" class="form-control" placeholder="Search by Category" value="@Model.SearchCategory" />
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </form>
                 <div class="table-responsive">
                     <table class="table table-hover table-dark table-translucent sticky-header">
                         <thead>
@@ -65,6 +78,8 @@
                             <th>@Html.DisplayNameFor(model => model.PaginatedProducts.Data.First().Ingredients)</th>
                             <th>@Html.DisplayNameFor(model => model.PaginatedProducts.Data.First().UsageInstructions)</th>
                             <th>@Html.DisplayNameFor(model => model.PaginatedProducts.Data.First().StockQuantity)</th>
+                            <th>Discount Description</th>
+                            <th>Discount Value</th>
                             <th>Actions</th>
                         </tr>
                         </thead>
@@ -86,6 +101,8 @@
                                 <td>@Html.DisplayFor(modelItem => item.Ingredients)</td>
                                 <td>@Html.DisplayFor(modelItem => item.UsageInstructions)</td>
                                 <td>@Html.DisplayFor(modelItem => item.StockQuantity)</td>
+                                <td>@Html.DisplayFor(modelItem => item.CouponDto.Description)</td>
+                                <td>@Html.DisplayFor(modelItem => item.CouponDto.Amount)</td>
                                 <td class="action-buttons">
                                     <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" title="Edit">
                                         <i class="fa fa-pencil"></i>

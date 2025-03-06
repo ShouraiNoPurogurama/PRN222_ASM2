@@ -1,5 +1,4 @@
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using SalesManagement.Repositories.Models;
+using SalesManagement.Repository.Dtos;
 using SalesManagement.Repository.Pagination;
 using SalesManagement.Service;
 
@@ -14,11 +13,25 @@ public class IndexModel : PageModel
         _productService = productService;
     }
 
-    public PaginatedResult<Product> PaginatedProducts { get; set; } = default!;
+    public PaginatedResult<GetProductDto> PaginatedProducts { get; set; }
+    public string? SearchName { get; set; }
+    public string? SearchIngredients { get; set; }
+    public string? SearchCategory { get; set; }
 
-    public async Task OnGetAsync(int pageIndex = 0, int pageSize = 5)
+    public async Task OnGetAsync(string? name, string? ingredients, string? category, int pageIndex = 0, int pageSize = 5)
     {
-        var paginationRequest = new PaginationRequest(pageIndex, pageSize);
-        PaginatedProducts = await _productService.GetAllAsync(paginationRequest);
+        SearchName = name;
+        SearchIngredients = ingredients;
+        SearchCategory = category;
+
+        var paginationRequest = new PaginationRequest
+        {
+            PageIndex = pageIndex,
+            PageSize = pageSize
+        };
+
+        var result = await _productService.Search(paginationRequest, name, category, ingredients);
+
+        PaginatedProducts = result;
     }
 }

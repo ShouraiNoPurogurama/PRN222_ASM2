@@ -1,14 +1,10 @@
-using System.ComponentModel.DataAnnotations;
-using Mapster;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using SalesManagement.Repositories.Models;
 using SalesManagement.Repository.Dtos;
 using SalesManagement.Service;
 
 namespace SalesManagement.RazorWebApp.Pages.Products;
 
+[Authorize(Policy = "AdminOrManagerOnly")]
 public class CreateModel : PageModel
 {
     private readonly IProductService _productService;
