@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using SalesManagement.Repositories.Models;
+using SalesManagement.Repository.Models;
 
 namespace SalesManagement.Repositories.DBContext;
 
@@ -23,7 +24,7 @@ public partial class SalesManagementDBContext : DbContext
     public virtual DbSet<Product> Products { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
-
+    public virtual DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
     public virtual DbSet<UserAccount> UserAccounts { get; set; }
 
 //     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -32,6 +33,11 @@ public partial class SalesManagementDBContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<OutboxMessage>(entity =>
+        {
+            entity.ToTable("OutboxMessage");
+        });
+        
         modelBuilder.Entity<Category>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Categori__3214EC07E90D3895");

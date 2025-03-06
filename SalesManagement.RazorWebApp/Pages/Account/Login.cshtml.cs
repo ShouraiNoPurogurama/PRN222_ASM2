@@ -29,7 +29,7 @@ public class LoginModel : PageModel
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, Input.UserName),
-                    new Claim(ClaimTypes.Role, user.RoleId.ToString()),
+                    new Claim(ClaimTypes.Role, user.RoleId.ToString())
                 };
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

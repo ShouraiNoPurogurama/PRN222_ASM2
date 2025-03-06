@@ -12,13 +12,15 @@ public class UnitOfWork(SalesManagementDBContext dbContext) : IUnitOfWork
     private ProductRepository? _productRepository;
     private CategoryRepository? _categoryRepository;
     private UserAccountRepository? _userAccountRepository;
+    private OutboxRepository? _outboxRepository;
 
     public ProductRepository ProductRepository => _productRepository ??= new ProductRepository(dbContext);
 
     public CategoryRepository CategoryRepository => _categoryRepository ??= new CategoryRepository(dbContext);
     
     public UserAccountRepository UserAccountRepository => _userAccountRepository ??= new UserAccountRepository(dbContext);
-    
+    public OutboxRepository OutboxRepository => _outboxRepository ??= new OutboxRepository(dbContext);
+
     public void SaveChanges()
     {
         dbContext.SaveChanges();

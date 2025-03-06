@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using SalesManagement.RazorWebApp.Hubs;
 using SalesManagement.Repositories.DBContext;
 using SalesManagement.Repository.DBContext.Interceptors;
+using SalesManagement.Repository.Models;
 using SalesManagement.Repository.UoW;
 using SalesManagement.Service;
 
@@ -16,6 +17,8 @@ builder.Services.AddRazorPages(options => { options.Conventions.ConfigureFilter(
 
 builder.Services.AddControllers();
 
+builder.Services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
+
 builder.Services.AddDbContext<SalesManagementDBContext>((sp, opt) =>
 {
     opt.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
@@ -25,11 +28,10 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<UserAccountService>();
 builder.Services.AddScoped<CategoryService>();
 builder.Services.AddScoped<ValidationService>();
+builder.Services.AddScoped<OutboxService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddSignalR();
 
-
-builder.Services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
@@ -43,27 +45,25 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("AdminOrManagerOnly", policy =>
         policy.RequireAssertion(context =>
             context.User.HasClaim(c => c.Type == ClaimTypes.Role && (c.Value == "1" || c.Value == "2"))));
-    
+
     options.AddPolicy("AdminOnly", policy =>
         policy.RequireAssertion(context =>
             context.User.HasClaim(c => c.Type == ClaimTypes.Role && (c.Value == "1"))));
-
 });
 
 
-//gRPC services
 builder.Services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>(options =>
-{
-    options.Address = new Uri(builder.Configuration["GrpcSettings:DiscountUri"]!);
-})
-.ConfigurePrimaryHttpMessageHandler(() =>
-{
-    var handler = new HttpClientHandler
     {
-        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-    };
-    return handler;
-});
+        options.Address = new Uri(builder.Configuration["GrpcSettings:DiscountUri"]!);
+    })
+    .ConfigurePrimaryHttpMessageHandler(() =>
+    {
+        var handler = new HttpClientHandler
+        {
+            ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+        };
+        return handler;
+    });
 
 
 var app = builder.Build();
