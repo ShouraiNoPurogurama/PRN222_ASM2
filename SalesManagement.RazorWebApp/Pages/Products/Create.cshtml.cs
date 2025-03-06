@@ -1,8 +1,10 @@
 using System.ComponentModel.DataAnnotations;
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SalesManagement.Repositories.Models;
+using SalesManagement.Repository.Dtos;
 using SalesManagement.Service;
 
 namespace SalesManagement.RazorWebApp.Pages.Products;
@@ -50,7 +52,7 @@ public class CreateModel : PageModel
             Product.ImageFile = uniqueFileName;
         }
 
-        await _productService.CreateAsync(Product);
+        await _productService.CreateAsync(Product.Adapt<ProductDto>());
 
         return RedirectToPage("./Index");
     }

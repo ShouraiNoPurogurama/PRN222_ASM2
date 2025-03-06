@@ -1,8 +1,10 @@
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SalesManagement.Repositories.Models;
+using SalesManagement.Repository.Dtos;
 using SalesManagement.Service;
 
 namespace SalesManagement.RazorWebApp.Pages.Products;
@@ -59,7 +61,7 @@ public class EditModel : PageModel
             Product.ImageFile = uniqueFileName;
         }
 
-        await _productService.UpdateAsync(Product);
+        await _productService.UpdateAsync(Product.Adapt<ProductDto>());
 
         return RedirectToPage("./Index");
     }
@@ -68,7 +70,7 @@ public class EditModel : PageModel
     {
         if (imageFile.Length == 0)
         {
-            return Unauthorized();
+            return BadRequest();
         }
 
         var uniqueFileName = await SaveImageAsync(imageFile);

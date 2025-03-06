@@ -1,5 +1,5 @@
-﻿using SalesManagement.Repositories.Models;
-using SalesManagement.Repository;
+﻿using Mapster;
+using SalesManagement.Repositories.Models;
 using SalesManagement.Repository.Dtos;
 using SalesManagement.Repository.Pagination;
 
@@ -9,8 +9,8 @@ public interface IProductService
 {
     Task<PaginatedResult<Product>> GetAllAsync(PaginationRequest? paginationRequest);
     Task<Product?> GetByIdAsync(Guid id);
-    Task<ValidationResponse> CreateAsync(Product product);
-    Task<ValidationResponse> UpdateAsync(Product product);
+    Task<ValidationResponse> CreateAsync(ProductDto productDto);
+    Task<ValidationResponse> UpdateAsync(ProductDto product);
     Task<bool> DeleteAsync(Guid id);
 
     Task<PaginatedResult<Product>> Search(PaginationRequest paginationRequest, string? name, string? category,
@@ -41,25 +41,27 @@ public class ProductService : IProductService
     }
 
 
-    public async Task<ValidationResponse> CreateAsync(Product product)
+    public async Task<ValidationResponse> CreateAsync(ProductDto productDto)
     {
-        if (!_validationService.ValidateProduct(product))
+        if (!_validationService.ValidateProduct(productDto))
         {
             return new ValidationResponse(false, _validationService.GetValidationErrors());
         }
 
+        var product = productDto.Adapt<Product>();
+        
         await _unitOfWork.ProductRepository.CreateAsync(product);
         return new ValidationResponse(true, new Dictionary<string, List<string>>());
     }
 
-    public async Task<ValidationResponse> UpdateAsync(Product product)
+    public async Task<ValidationResponse> UpdateAsync(ProductDto productDto)
     {
-        if (!_validationService.ValidateProduct(product))
+        if (!_validationService.ValidateProduct(productDto))
         {
             return new ValidationResponse(false, _validationService.GetValidationErrors());
         }
 
-        await _unitOfWork.ProductRepository.UpdateAsync(product);
+        await _unitOfWork.ProductRepository.UpdateAsync(productDto.Adapt<Product>());
         return new ValidationResponse(true, new Dictionary<string, List<string>>());
     }
 

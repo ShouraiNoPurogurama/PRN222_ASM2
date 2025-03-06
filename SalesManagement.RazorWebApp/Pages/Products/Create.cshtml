@@ -6,21 +6,6 @@
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
-<style>
-    .file-drop-area {
-        border: 2px dashed #ccc;
-        padding: 20px;
-        text-align: center;
-        cursor: pointer;
-        color: #aaa;
-    }
-
-    .file-drop-area.dragover {
-        border-color: #000;
-        color: #000;
-    }
-</style>
-
 <section id="create-product" class="info-section text-white bg-right bg-dark">
     <div class="container">
         <div class="row">
@@ -50,7 +35,7 @@
                     </div>
                     <div class="mb-3">
                         <label asp-for="FileUpload" class="form-label fw-bold">Product Image</label>
-                        <input type="file" asp-for="FileUpload" class="form-control" id="imageUpload" />
+                        <input type="file" asp-for="FileUpload" class="form-control" id="imageUpload"/>
                         <img id="imagePreview"/>
                         <span asp-validation-for="FileUpload" class="text-danger"></span>
                     </div>
@@ -90,9 +75,9 @@
 <script src="~/js/SalesManagementClient.js"></script>
 
 <script>
-    document.getElementById("imageUpload").addEventListener("change", function(event) {
+    document.getElementById("imageUpload").addEventListener("change", function (event) {
         var reader = new FileReader();
-        reader.onload = function(){
+        reader.onload = function () {
             var output = document.getElementById("imagePreview");
             output.src = reader.result;
             output.style.display = "block";

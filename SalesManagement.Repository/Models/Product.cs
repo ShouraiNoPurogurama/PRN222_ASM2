@@ -2,10 +2,11 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using SalesManagement.Repository.Abstractions;
 
 namespace SalesManagement.Repositories.Models;
 
-public partial class Product
+public partial class Product : IEntity<Guid>
 {
     public Guid Id { get; set; }
 

@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Mapster;
+using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 using SalesManagement.Repositories.Models;
+using SalesManagement.Repository.Dtos;
 using SalesManagement.Service;
 
 namespace SalesManagement.RazorWebApp.Hubs;
@@ -20,19 +22,21 @@ public class SalesManagementHubs : Hub
     {
         try
         {
-            var product = JsonConvert.DeserializeObject<Product>(productJson)
-                ?? throw new InvalidDataException();
+            var productDto = JsonConvert.DeserializeObject<ProductDto>(productJson)
+                             ?? throw new InvalidDataException();
 
-            var validationResponse = await _productService.CreateAsync(product);
+            var validationResponse = await _productService.CreateAsync(productDto);
 
             if (!validationResponse.IsValid)
             {
                 await Clients.Caller.SendAsync("Receive_ValidationErrors", validationResponse.Errors);
                 return;
             }
-            
+
+            var product = productDto.Adapt<Product>();
+
             var category = await _categoryService.GetByIdAsync(product.CategoryId.Value);
-            
+
             product.Category = category;
 
             await Clients.All.SendAsync("Receive_CreatedProduct", product);
@@ -43,14 +47,15 @@ public class SalesManagementHubs : Hub
             throw;
         }
     }
-        public async Task SendUpdatedProduct(string productJson)
+
+    public async Task SendUpdatedProduct(string productJson)
     {
         try
         {
-            var product = JsonConvert.DeserializeObject<Product>(productJson)
-                ?? throw new InvalidDataException();
+            var productDto = JsonConvert.DeserializeObject<ProductDto>(productJson)
+                          ?? throw new InvalidDataException();
             
-            var validationResponse = await _productService.UpdateAsync(product);
+            var validationResponse = await _productService.UpdateAsync(productDto);
             
             if (!validationResponse.IsValid)
             {
@@ -58,7 +63,9 @@ public class SalesManagementHubs : Hub
                 return;
             }
             
-            await Clients.All.SendAsync("Receive_UpdatedProduct", product);
+            var newProduct = await _productService.GetByIdAsync(productDto.Id!.Value);
+
+            await Clients.All.SendAsync("Receive_UpdatedProduct", newProduct);
         }
         catch (Exception e)
         {
@@ -66,15 +73,15 @@ public class SalesManagementHubs : Hub
             throw;
         }
     }
-    
+
     public async Task SendDeletedProduct(string productId)
     {
         try
         {
             await _productService.DeleteAsync(Guid.Parse(productId));
 
-            Console.WriteLine("Product id: " +productId);
-            
+            Console.WriteLine("Product id: " + productId);
+
             await Clients.All.SendAsync("Receive_DeletedProduct", productId);
         }
         catch (Exception e)
