@@ -5,8 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using SalesManagement.RazorWebApp.Hubs;
 using SalesManagement.Repositories.DBContext;
-using SalesManagement.Repository.DBContext.Interceptors;
-using SalesManagement.Repository.Models;
+using SalesManagement.Repository.Data.Interceptors;
 using SalesManagement.Repository.UoW;
 using SalesManagement.Service;
 
@@ -14,7 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages(options => { options.Conventions.ConfigureFilter(new IgnoreAntiforgeryTokenAttribute()); });
-
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();

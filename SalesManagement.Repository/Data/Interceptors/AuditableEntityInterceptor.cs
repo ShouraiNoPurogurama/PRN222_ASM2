@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using SalesManagement.Repository.Abstractions;
 
-namespace SalesManagement.Repository.DBContext.Interceptors;
+namespace SalesManagement.Repository.Data.Interceptors;
 
-public class AuditableEntityInterceptor : SaveChangesInterceptor
+public class AuditableEntityInterceptor(IHttpContextAccessor contextAccessor) : SaveChangesInterceptor
 {
     public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
     {
@@ -22,21 +23,21 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
         return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 
-    public void UpdateEntities(DbContext? context)
+    public void UpdateEntities(DbContext? dbContext)
     {
-        if (context is null) return;
+        if (dbContext is null) return;
 
-        foreach (EntityEntry<IEntity> entry in context.ChangeTracker.Entries<IEntity>()) //this will give us all the entity entries that implement IEntity
+        foreach (EntityEntry<IEntity> entry in dbContext.ChangeTracker.Entries<IEntity>()) //this will give us all the entity entries that implement IEntity
         {
             if (entry.State == EntityState.Added)
             {
-                entry.Entity.CreatedBy = "NA";
+                entry.Entity.CreatedBy = contextAccessor.HttpContext.User.Identity!.Name!;
                 entry.Entity.CreatedAt = DateTimeOffset.Now;
             }
 
             if (entry.State == EntityState.Added || entry.State == EntityState.Modified || entry.HasChangedOwnedEntities())
             {
-                entry.Entity.LastModifiedBy = "NA";
+                entry.Entity.LastModifiedBy = contextAccessor.HttpContext.User.Identity!.Name!;
                 entry.Entity.LastModified = DateTimeOffset.UtcNow;
             }
         }

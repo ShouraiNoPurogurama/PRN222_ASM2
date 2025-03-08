@@ -134,7 +134,7 @@ public class ProductService : IProductService
                 ProductId = product.Id.ToString()
             });
 
-            if (coupon is not null)
+            if (coupon is not null && coupon.Id != "No discount Id")
             {
                 dataResult.Add(product.Adapt<GetProductDto>() with
                 {

@@ -14,13 +14,13 @@ public class DiscountService(DiscountContext dbContext, ILogger<DiscountService>
         var coupon = await dbContext.Coupons
             .FirstOrDefaultAsync(c => c.ProductId == request.ProductId) ?? new Coupon
         {
-            ProductId = "No Discount", Amount = 0, Description = "No Discount Desc"
+            ProductId = "No Discount", Amount = 0, Description = "No Discount Desc", Id = "No discount Id"
         };
 
         logger.LogInformation("> Discount is retrieved for Product: {ProductId}", coupon.ProductId);
 
         var couponModel = coupon.Adapt<CouponModel>();
-        
+
         return couponModel;
     }
 

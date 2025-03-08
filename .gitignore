@@ -4,3 +4,7 @@ debug/
 obj/
 wwwroot/
 .vs/
+Discount/Discount.gRPC/appsettings.json
+Discount/Discount.gRPC/prn222_discountdb
+SP25_PRN222_NET1711_ASM2_G1_SE184905_AnhTN.sln.DotSettings.user
+SP25_PRN222_NET1711_ASM2_SE184905_AnhTN.sln.DotSettings.user
